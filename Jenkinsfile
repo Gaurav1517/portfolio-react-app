@@ -49,10 +49,13 @@ pipeline {
               sudo ln -s /usr/local/node/bin/npm /usr/local/bin/npm &&
               node -v && npm -v
 
-              # Install pm2 globally if not installed
-              if ! command -v pm2 &> /dev/null; then
-                npm install -g pm2  # Install pm2 globally if not already installed
-              fi
+              # Install pm2 globally
+              npm install -g pm2 &&
+              
+              # Print NPM global bin path and check if PM2 exists
+              echo "NPM global bin path: $(npm bin -g)" &&
+              which pm2 &&
+              pm2 -v
 
               # Install app dependencies and build the app
               cd ${APP_DIR} &&
@@ -70,6 +73,8 @@ pipeline {
           sh """
             ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
               cd ${APP_DIR} &&
+              # Print PM2 status before starting
+              pm2 status &&
               # Stop the app if already running and start with PM2
               pm2 stop portfolio || true &&  # Stop the app if running
               pm2 start npm --name "portfolio" -- start
