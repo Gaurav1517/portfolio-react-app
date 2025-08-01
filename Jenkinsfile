@@ -3,6 +3,9 @@ pipeline {
   triggers { 
     githubPush()  // Triggered by GitHub push events
   } 
+  tools {
+     nodejs 'nodejs23'
+  }
   environment { 
     EC2_IP = '192.168.70.134'  // IP of your VM or EC2 instance
     SSH_CRED = 'git-ssh-cred'   // The Jenkins credential ID for SSH key
