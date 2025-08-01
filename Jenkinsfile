@@ -1,13 +1,13 @@
 pipeline { 
   agent any 
   triggers { 
-    githubPush() 
+    githubPush()  // Triggered by GitHub push events
   } 
   environment { 
-    EC2_IP = '192.168.70.134'  // Replace with your EC2 public IP
-    SSH_CRED = 'git-ssh-cred'  // Jenkins SSH credential ID
-    REPO = 'git@github.com:Gaurav1517/portfolio-react-app.git'  // Your React portfolio Git repo
-    APP_DIR = '/home/sysops/portfolio-app'  // Target directory on EC2
+    EC2_IP = '192.168.70.134'  // IP of your VM or EC2 instance
+    SSH_CRED = 'git-ssh-cred'   // The Jenkins credential ID for SSH key
+    REPO = 'git@github.com:Gaurav1517/portfolio-react-app.git'  // React repo
+    APP_DIR = '/home/sysops/portfolio-app'  // Target directory on your EC2/VM
   } 
   stages { 
     stage('Trigger Received') { 
@@ -20,11 +20,11 @@ pipeline {
       steps { 
         sshagent(credentials: [SSH_CRED]) { 
           sh """
-            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} '
+            ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
               if [ ! -d "${APP_DIR}" ]; then
                 git clone ${REPO} ${APP_DIR}
               else
-                cd ${APP_DIR} && git pull origin main  # Pull latest changes if the repo already exists
+                cd ${APP_DIR} && git pull origin main  # Pull latest changes if repo exists
               fi
             '
           """ 
@@ -36,10 +36,10 @@ pipeline {
       steps { 
         sshagent(credentials: [SSH_CRED]) { 
           sh """
-            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} '
+            ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
               cd ${APP_DIR} &&
               if ! command -v pm2 &> /dev/null; then
-                npm install -g pm2  # Ensure pm2 is installed globally
+                npm install -g pm2  # Install pm2 globally if not already installed
               fi
               npm install &&
               npm run build
@@ -53,9 +53,9 @@ pipeline {
       steps { 
         sshagent(credentials: [SSH_CRED]) { 
           sh """
-            ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} '
+            ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
               cd ${APP_DIR} &&
-              pm2 stop portfolio || true &&  # Stop the app if it's running
+              pm2 stop portfolio || true &&  # Stop the app if running
               pm2 start npm --name "portfolio" -- start
             '
           """ 
