@@ -35,15 +35,27 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies and Build React App') {
+    stage('Install Node.js and Build React App') {
       steps {
         sshagent(credentials: [SSH_CRED]) {
           sh """
             ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
-              cd ${APP_DIR} &&
+              # Install Node.js v23.11.1
+              cd /tmp &&
+              wget https://nodejs.org/dist/v23.11.1/node-v23.11.1-linux-x64.tar.xz &&
+              tar -xvf node-v23.11.1-linux-x64.tar.xz &&
+              sudo mv node-v23.11.1-linux-x64 /usr/local/node &&
+              sudo ln -s /usr/local/node/bin/node /usr/local/bin/node &&
+              sudo ln -s /usr/local/node/bin/npm /usr/local/bin/npm &&
+              node -v && npm -v
+
+              # Install pm2 globally if not installed
               if ! command -v pm2 &> /dev/null; then
                 npm install -g pm2  # Install pm2 globally if not already installed
               fi
+
+              # Install app dependencies and build the app
+              cd ${APP_DIR} &&
               npm install &&
               npm run build
             '
