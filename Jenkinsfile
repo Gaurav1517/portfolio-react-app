@@ -4,7 +4,7 @@ pipeline {
     githubPush()  // Triggered by GitHub push events
   }
   tools {
-    nodejs 'nodejs22'  // Use Jenkins tool configuration for NodeJS
+    nodejs 'nodejs22'  // Use Jenkins tool configuration for NodeJS22
   }
   environment {
     EC2_IP = '192.168.70.134'  // IP of your VM or EC2 instance
