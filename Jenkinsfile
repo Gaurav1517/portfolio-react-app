@@ -4,7 +4,7 @@ pipeline {
     githubPush()  // Triggered by GitHub push events
   }
   tools {
-     nodejs 'nodejs23'  // Use Jenkins tool configuration for NodeJS
+    nodejs 'nodejs23'  // Use Jenkins tool configuration for NodeJS
   }
   environment {
     EC2_IP = '192.168.70.134'  // IP of your VM or EC2 instance
@@ -41,17 +41,9 @@ pipeline {
           sh """
             ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
               cd ${APP_DIR} &&
-              # Check if Node.js is installed, if not install it
-              if ! command -v node &> /dev/null; then
-                echo "Node.js not found. Installing..." &&
-                curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash - &&
-                sudo apt-get install -y nodejs
-              fi
-              # Check if pm2 is installed globally, if not install it
               if ! command -v pm2 &> /dev/null; then
                 npm install -g pm2  # Install pm2 globally if not already installed
               fi
-              # Install app dependencies and build the app
               npm install &&
               npm run build
             '
@@ -76,4 +68,3 @@ pipeline {
     }
   }
 }
-
