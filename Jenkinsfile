@@ -34,54 +34,65 @@ pipeline {
         }
       }
     }
+    stage('build'){
+        steps{
+            sshagent(credentials: [SSH_CRED]) {
+                sh """
+                    ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
+                    npm install 
+                    '
+                """
+          }
+        }
+    }
 
-    stage('Install Node.js and Build React App') {
-      steps {
-        sshagent(credentials: [SSH_CRED]) {
-          sh """
-            ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
-              # Install Node.js v23.11.1
-              cd /tmp &&
-              wget https://nodejs.org/dist/v23.11.1/node-v23.11.1-linux-x64.tar.xz &&
-              tar -xvf node-v23.11.1-linux-x64.tar.xz &&
-              sudo mv node-v23.11.1-linux-x64 /usr/local/node &&
-              sudo ln -s /usr/local/node/bin/node /usr/local/bin/node &&
-              sudo ln -s /usr/local/node/bin/npm /usr/local/bin/npm &&
-              node -v && npm -v
+  //   stage('Install Node.js and Build React App') {
+  //     steps {
+  //       sshagent(credentials: [SSH_CRED]) {
+  //         sh """
+  //           ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
+  //             # Install Node.js v23.11.1
+  //             cd /tmp &&
+  //             wget https://nodejs.org/dist/v23.11.1/node-v23.11.1-linux-x64.tar.xz &&
+  //             tar -xvf node-v23.11.1-linux-x64.tar.xz &&
+  //             sudo mv node-v23.11.1-linux-x64 /usr/local/node &&
+  //             sudo ln -s /usr/local/node/bin/node /usr/local/bin/node &&
+  //             sudo ln -s /usr/local/node/bin/npm /usr/local/bin/npm &&
+  //             node -v && npm -v
 
-              # Install pm2 globally
-              npm install -g pm2 &&
+  //             # Install pm2 globally
+  //             npm install -g pm2 &&
               
-              # Print NPM global bin path and check if PM2 exists
-              echo "NPM global bin path: $(npm bin -g)" &&
-              which pm2 &&
-              pm2 -v
+  //             # Print NPM global bin path and check if PM2 exists
+  //             echo "NPM global bin path: $(npm bin -g)" &&
+  //             which pm2 &&
+  //             pm2 -v
 
-              # Install app dependencies and build the app
-              cd ${APP_DIR} &&
-              npm install &&
-              npm run build
-            '
-          """
-        }
-      }
-    }
+  //             # Install app dependencies and build the app
+  //             cd ${APP_DIR} &&
+  //             npm install &&
+  //             npm run build
+  //           '
+  //         """
+  //       }
+  //     }
+  //   }
 
-    stage('Start App with PM2') {
-      steps {
-        sshagent(credentials: [SSH_CRED]) {
-          sh """
-            ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
-              cd ${APP_DIR} &&
-              # Print PM2 status before starting
-              pm2 status &&
-              # Stop the app if already running and start with PM2
-              pm2 stop portfolio || true &&  # Stop the app if running
-              pm2 start npm --name "portfolio" -- start
-            '
-          """
-        }
-      }
-    }
-  }
+  //   stage('Start App with PM2') {
+  //     steps {
+  //       sshagent(credentials: [SSH_CRED]) {
+  //         sh """
+  //           ssh -o StrictHostKeyChecking=no sysops@${EC2_IP} '
+  //             cd ${APP_DIR} &&
+  //             # Print PM2 status before starting
+  //             pm2 status &&
+  //             # Stop the app if already running and start with PM2
+  //             pm2 stop portfolio || true &&  # Stop the app if running
+  //             pm2 start npm --name "portfolio" -- start
+  //           '
+  //         """
+  //       }
+  //     }
+  //   }
+  // }
 }
