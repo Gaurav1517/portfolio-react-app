@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    // triggers {
-    //     githubPush()
-    // }
+    triggers {
+        githubPush()
+    }
 
     environment {
         EC2_IP = '192.168.70.136'
