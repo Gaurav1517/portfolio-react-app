@@ -62,7 +62,7 @@ portfolio-react-app/
 
 ## 📌 Notes
 
-* This project is under active development.
+* This project is under active development..
 * Pull requests and contributions are welcome!
 
 ---
