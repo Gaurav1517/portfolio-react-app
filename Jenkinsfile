@@ -47,7 +47,7 @@ pipeline {
                             sudo ln -sf /usr/local/node/bin/pm2 /usr/local/bin/pm2
                         fi
                         
-                        # Install serve globally if not available
+                        # Install serve globally if not available.
                         if ! command -v serve > /dev/null 2>&1; then
                             npm install -g serve >> /dev/null 2>&1
                             sudo ln -sf /usr/local/node/bin/serve /usr/local/bin/serve
