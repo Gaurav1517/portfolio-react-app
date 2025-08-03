@@ -41,7 +41,7 @@ pipeline {
                             sudo ln -sf /usr/local/node/bin/npm /usr/local/bin/npm
                         fi
 
-                        # Install PM2 globally if not available
+                        # Install PM2 globally if not available.
                         if ! command -v pm2 > /dev/null 2>&1; then
                             npm install -g pm2 >> /dev/null 2>&1
                             sudo ln -sf /usr/local/node/bin/pm2 /usr/local/bin/pm2
