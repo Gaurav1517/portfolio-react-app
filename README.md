@@ -62,7 +62,7 @@ portfolio-react-app/
 
 ## 📌 Notes
 
-* This project is under active development..
+* This project is under active development.
 * Pull requests and contributions are welcome!
 
 ---
@@ -77,7 +77,8 @@ portfolio-react-app/
 ## 📄 License
 
 This project is licensed under the **MIT License**.
-See the [LICENSE](LICENSE) file for details.
+See the [LICENSE](LICENSE) file for details..
+
 
 
 
