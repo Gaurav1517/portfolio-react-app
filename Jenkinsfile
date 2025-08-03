@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     executeSSH("""
-                        # Install Node.js if not already installed
+                        # Install Node.js if not already installed.
                         if ! command -v npm > /dev/null 2>&1; then
                             cd /tmp &&
                             wget -q https://nodejs.org/dist/v23.11.1/node-v23.11.1-linux-x64.tar.xz &&
