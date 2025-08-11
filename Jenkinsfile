@@ -54,7 +54,7 @@ pipeline {
                     sshagent (credentials: ["${SSH_CRED}"]) {
                         sh """
                             ssh -o StrictHostKeyChecking=no ubuntu@${EC2_IP} '
-                            # Ensure deploy directory exists
+                            # Ensure deploy directory exists.
                             sudo mkdir -p "$DEPLOY_DIR"
         
                             # Clear old build files
